@@ -56,6 +56,9 @@ export const userMgmtRoute: Routes = [
         component: UserMgmtUpdateComponent,
         resolve: {
             user: UserMgmtResolve
+        },
+        data: {
+            pageTitle: 'userManagement.home.title'
         }
     },
     {
