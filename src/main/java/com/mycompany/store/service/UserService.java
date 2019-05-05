@@ -10,9 +10,11 @@ import com.mycompany.store.security.SecurityUtils;
 import com.mycompany.store.service.dto.UserDTO;
 import com.mycompany.store.service.util.RandomUtil;
 import com.mycompany.store.web.rest.errors.*;
+import com.mycompany.store.web.rest.vm.ManagedUserVM;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -145,11 +147,14 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        user.setPassword(encryptedPassword);
-        user.setResetKey(RandomUtil.generateResetKey());
-        user.setResetDate(Instant.now());
+        // String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        // user.setPassword(encryptedPassword);
+        // user.setResetKey(RandomUtil.generateResetKey());
+        // user.setResetDate(Instant.now());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setActivated(true);
+        // new user gets registration key
+        user.setActivationKey(RandomUtil.generateActivationKey());        
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById)

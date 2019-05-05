@@ -3,6 +3,10 @@
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <h2 id="myUserLabel" jhiTranslate="userManagement.home.createOrEditLabel">
                 Create or edit a User
+                <br>
+                <div class="alert alert-danger" ng-show="(user.password !== confirmPassword)" data-translate="global.messages.error.dontmatch">
+                    The password and its confirmation do not match!
+                </div>                
             </h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
@@ -109,13 +113,54 @@
                         <option *ngFor="let authority of authorities" [value]="authority">{{authority}}</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="password" data-translate="global.form.newpassword">New password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="{{'global.form.newpassword.placeholder' | translate}}"
+                        [(ngModel)]="user.password" ng-minlength=4 ng-maxlength=50 required>
+                    <div ng-show="form.password.$dirty && form.password.$invalid">
+                        <p class="help-block"
+                               ng-show="form.password.$error.required" data-translate="global.messages.validate.newpassword.required">
+                            Your password is required.
+                        </p>
+                        <p class="help-block"
+                               ng-show="form.password.$error.minlength" data-translate="global.messages.validate.newpassword.minlength">
+                            Your password is required to be at least 4 characters.
+                        </p>
+                        <p class="help-block"
+                               ng-show="form.password.$error.maxlength" data-translate="global.messages.validate.newpassword.maxlength">
+                            Your password cannot be longer than 50 characters.
+                        </p>
+                    </div>
+                    <password-strength-bar password-to-check="user.password"></password-strength-bar>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="confirmPassword" data-translate="global.form.confirmpassword">New password confirmation</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="{{'global.form.confirmpassword.placeholder' | translate}}"
+                        [(ngModel)]="confirmPassword" ng-minlength=4 ng-maxlength=50 required>
+                    <div ng-show="form.confirmPassword.$dirty && form.confirmPassword.$invalid">
+                        <p class="help-block"
+                               ng-show="form.confirmPassword.$error.required" data-translate="global.messages.validate.confirmpassword.required">
+                            Your confirmation password is required.
+                        </p>
+                        <p class="help-block"
+                               ng-show="form.confirmPassword.$error.minlength" data-translate="global.messages.validate.confirmpassword.minlength">
+                            Your confirmation password is required to be at least 4 characters.
+                        </p>
+                        <p class="help-block"
+                               ng-show="form.confirmPassword.$error.maxlength" data-translate="global.messages.validate.confirmpassword.maxlength">
+                            Your confirmation password cannot be longer than 50 characters.
+                        </p>
+                    </div>
+                </div>                
+                
             </div>
             <div>
                 <button type="button" class="btn btn-secondary" (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span
                     jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" [disabled]="editForm.form.invalid || isSaving || (user.password !== confirmPassword)" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
             </div>

@@ -5,9 +5,7 @@ import com.mycompany.store.config.Constants;
 import com.mycompany.store.domain.Authority;
 import com.mycompany.store.domain.User;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
+import javax.persistence.Column;
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.Set;
@@ -24,6 +22,8 @@ public class UserDTO {
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
     private String login;
+    
+    private String password;
 
     @Size(max = 50)
     private String firstName;
@@ -60,6 +60,7 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.login = user.getLogin();
+        this.password = user.getPassword();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -91,6 +92,13 @@ public class UserDTO {
         this.login = login;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }    
     public String getFirstName() {
         return firstName;
     }
